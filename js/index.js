@@ -1,6 +1,7 @@
 var xhr = new XMLHttpRequest();
 var url = 'https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json';
 xhr.open('GET', url, true);
+
 xhr.onload = function() {
     if (this.status !== 200) return;
     var quotesList = JSON.parse(this.responseText).quotes;
@@ -9,6 +10,13 @@ xhr.onload = function() {
     document.querySelector('.button').addEventListener('click', function () {
         loadQuote(quotesList);
     });
+
+    document.querySelector('.loader-wrapper').classList.toggle('hide-loader');
+    document.querySelector('.container').classList.toggle('show-container');
+};
+
+xhr.onerror = function() {
+    document.querySelector('.loading-text').innerHTML = 'Could\'t</br>load a quote</br>(⌣́_⌣̀)';
 };
 
 xhr.send();
@@ -17,7 +25,8 @@ xhr.send();
 function loadQuote(arr) {
     var randomItem = arr[Math.floor(Math.random() * arr.length)];
     document.querySelector('.quote-text').textContent = randomItem.quote;
-    document.getElementById('author').textContent = randomItem.author;
+    document.getElementById('author').textContent = '- ' + randomItem.author;
+
     var randomColor = Math.floor(Math.random() * colorArray.length);
     document.body.style.backgroundColor = colorArray[randomColor];
     document.querySelector('.button').style.backgroundColor = colorArray[randomColor];
